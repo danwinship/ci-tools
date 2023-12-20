@@ -470,7 +470,7 @@ func mergeJobConfig(destination, source *prowconfig.JobConfig, allJobs sets.Set[
 func mergePresubmits(old, new *prowconfig.Presubmit) prowconfig.Presubmit {
 	merged := *new
 
-	merged.AlwaysRun = old.AlwaysRun
+	merged.AlwaysRun = old.AlwaysRun && new.AlwaysRun
 	merged.RunIfChanged = old.RunIfChanged
 	merged.SkipIfOnlyChanged = old.SkipIfOnlyChanged
 	merged.MaxConcurrency = old.MaxConcurrency
@@ -481,7 +481,6 @@ func mergePresubmits(old, new *prowconfig.Presubmit) prowconfig.Presubmit {
 	if new.RunIfChanged != "" || new.SkipIfOnlyChanged != "" {
 		merged.RunIfChanged = new.RunIfChanged
 		merged.SkipIfOnlyChanged = new.SkipIfOnlyChanged
-		merged.AlwaysRun = new.AlwaysRun
 	}
 
 	// TODO(muller): Special case images jobs for now. Some repos are marking

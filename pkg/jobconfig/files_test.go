@@ -428,6 +428,24 @@ func TestMergePresubmits(t *testing.T) {
 			new:      &prowconfig.Presubmit{RegexpChangeMatcher: prowconfig.RegexpChangeMatcher{SkipIfOnlyChanged: "new"}},
 			expected: prowconfig.Presubmit{RegexpChangeMatcher: prowconfig.RegexpChangeMatcher{SkipIfOnlyChanged: "new"}},
 		},
+		{
+			name:     "AlwaysRun=false from old takes precedence over AlwaysRun=true from new",
+			old:      &prowconfig.Presubmit{AlwaysRun: false},
+			new:      &prowconfig.Presubmit{AlwaysRun: true},
+			expected: prowconfig.Presubmit{AlwaysRun: false},
+		},
+		{
+			name:     "AlwaysRun=false from new takes precedence over AlwaysRun=true from old",
+			old:      &prowconfig.Presubmit{AlwaysRun: true},
+			new:      &prowconfig.Presubmit{AlwaysRun: false},
+			expected: prowconfig.Presubmit{AlwaysRun: false},
+		},
+		{
+			name:     "AlwaysRun=true + AlwaysRun=true = true",
+			old:      &prowconfig.Presubmit{AlwaysRun: true},
+			new:      &prowconfig.Presubmit{AlwaysRun: true},
+			expected: prowconfig.Presubmit{AlwaysRun: true},
+		},
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
